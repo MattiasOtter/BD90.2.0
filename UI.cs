@@ -8,7 +8,7 @@ class UI
     {
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("1. Registrera lån.\n2. Återlämning av media.\n3. Hitta media.\n4. Lägg till media.\n5. Visa all media.\n0. Avsluta.");
+        Console.WriteLine("1. Register Loans.\n2. Media returns.\n3. Find media.\n4. Add media.\n5. Show all media.\n0. Exit.");
     }
     public void SelectMenuChoice()
     {
@@ -47,7 +47,7 @@ class UI
 
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Välj ett av valen från menyn.\nTryck på valfri knapp för att fortsätta.");
+                        Console.WriteLine("Make a choice from the menu.\nPress a key to continue.");
                         Console.ReadKey();
                         break;
                 }
@@ -55,7 +55,7 @@ class UI
             catch (Exception)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Något gick fel.\nTryck på valfri knapp för att fortsätta.");
+                Console.WriteLine("Something went wrong.\nPress a key to continue.");
                 Console.ReadKey();
             }
         }
@@ -65,34 +65,34 @@ class UI
         while (true)
         {
             Register newPerson = new();
-            Console.Write("Namn på lånadstagare: ");
+            Console.Write("Borrowers name: ");
             newPerson.PersonName = Console.ReadLine();
             while (string.IsNullOrWhiteSpace(newPerson.PersonName))
             {
-                Console.Write("Lånadstagare måste ha ett namn.\nNamn på lånadstagare: ");
+                Console.Write("Borrower needs to have a name.\nBorrowers name: ");
                 newPerson.PersonName = Console.ReadLine();
             }
-            Console.Write($"Personnummer på {newPerson.PersonName}: ");
+            Console.Write($"{newPerson.PersonName} social security number: ");
             newPerson.SocialSecurityNr = Console.ReadLine();
             while (string.IsNullOrWhiteSpace(newPerson.SocialSecurityNr))
             {
-                Console.Write($"Lånadstagare måste ha ett personnummer.\nPersonnummer på {newPerson.PersonName}: ");
+                Console.Write($"Borrower needs to have a social security number.\n{newPerson.PersonName} social security number: ");
                 newPerson.SocialSecurityNr = Console.ReadLine();
             }
             try
             {
-                Console.Write("Produktens ID: ");
+                Console.Write("Products ID: ");
                 newPerson.BorrowId = int.Parse(Console.ReadLine());
-                Console.WriteLine($"\nKvitto:\nLåntagarnummer: {newPerson.BorrowNr}\nID: {newPerson.BorrowId}\nLånadstagare: {newPerson.PersonName}\nUtlånad: {newPerson.DateBorrowed}\nÅterlämnas senast: {newPerson.ReturnDate}\n");
+                Console.WriteLine($"\nReceipt:\nBorrownumber: {newPerson.BorrowNr}\nID: {newPerson.BorrowId}\nBorrower: {newPerson.PersonName}\nBorrowed: {newPerson.DateBorrowed}\nLatest return: {newPerson.ReturnDate}\n");
                 myRegister.person.Add(newPerson);
-                Console.WriteLine("Tryck på valfri knapp för att fortsätta.");
+                Console.WriteLine("Press a key to continue.");
                 Console.ReadKey();
                 break;
             }
             catch (Exception)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Använd endast siffror.\nFörsök igen.\n");
+                Console.WriteLine("Only numbers please.\nTry again.\n");
                 Console.ForegroundColor = ConsoleColor.Yellow;
             }
         }
@@ -101,7 +101,7 @@ class UI
     public void RegisterReturn()
     {
         Console.Clear();
-        Console.WriteLine("1. Registrera återlämning via val av utlånare.\n2. Registrera återlämning via lånenummer.\n0. Avbryt.");
+        Console.WriteLine("1. Register return by choosing borrower.\n2. Register return via borrownumber.\n0. Exit.");
         int choice = int.Parse(Console.ReadLine());
 
         switch (choice)
@@ -109,7 +109,7 @@ class UI
             case 1:
                 for (int i = 0; i < myRegister.person.Count; i++)
                 {
-                    Console.WriteLine($"{i + 1}: Låntagarnummer:{myRegister.person[i].BorrowNr}   ID:{myRegister.person[i].BorrowId}   Lånadstagare:{myRegister.person[i].PersonName}   Återlämnas senast:{myRegister.person[i].ReturnDate}");
+                    Console.WriteLine($"{i + 1}: Borrownumber:{myRegister.person[i].BorrowNr}   ID:{myRegister.person[i].BorrowId}   Borrower:{myRegister.person[i].PersonName}   Latest Return:{myRegister.person[i].ReturnDate}");
                 }
                 try
                 {
@@ -117,41 +117,41 @@ class UI
                     int indexChoice = int.Parse(Console.ReadLine());
                     if (myRegister.person[indexChoice - 1].FindOutIfMediaIsLate() == true)
                     {
-                        Console.WriteLine($"Förseningsavgift debiteras från ditt kort. Din media är {myRegister.person[indexChoice - 1].TimeLate} sekunder sen");
+                        Console.WriteLine($"Delay fee has been debited. Your media is {myRegister.person[indexChoice - 1].TimeLate} seconds late");
                         myRegister.person.RemoveAt(indexChoice - 1);
                     }
                     else if (myRegister.person[indexChoice - 1].FindOutIfMediaIsLate() == false)
                     {
-                        Console.WriteLine($"MediaID: {myRegister.person[indexChoice - 1].BorrowId} är återlämnad av {myRegister.person[indexChoice - 1].PersonName}.");
+                        Console.WriteLine($"MediaID: {myRegister.person[indexChoice - 1].BorrowId} is returned by {myRegister.person[indexChoice - 1].PersonName}.");
                         myRegister.person.RemoveAt(indexChoice - 1);
                     }
                 }
                 catch (Exception)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Något gick fel.\nFörsök igen.\n");
+                    Console.WriteLine("Something went wrong.\nPlease try again.\n");
                     Console.ForegroundColor = ConsoleColor.Yellow;
                 }
-                Console.WriteLine("Tryck på valfri knapp för att fortsätta.");
+                Console.WriteLine("Press a key to continue.");
                 Console.ReadKey();
                 break;
 
             case 2:
                 try
                 {
-                    Console.Write("Skriv in låntagarnummer: ");
+                    Console.Write("Type in borrownumber: ");
                     int borrowNr = int.Parse(Console.ReadLine());
                     for (int i = 0; i < myRegister.person.Count; i++)
                     {
                         if (borrowNr == myRegister.person[i].BorrowNr)
                         {
-                            Console.WriteLine($"MediaID: {myRegister.person[i].BorrowId} är återlämnad av {myRegister.person[i].PersonName}.");
+                            Console.WriteLine($"MediaID: {myRegister.person[i].BorrowId} is returned by {myRegister.person[i].PersonName}.");
                             myRegister.person.Remove(myRegister.person[i]);
                         }
                         else
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("Låntagarnumret ogiltigt.");
+                            Console.WriteLine("Borrownumber is invalid.");
                             Console.ForegroundColor = ConsoleColor.Yellow;
                         }
                     }
@@ -159,10 +159,10 @@ class UI
                 catch (Exception)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Använd endast siffror.\nFörsök igen.\n");
+                    Console.WriteLine("Only use numbers.\nPlease try again.\n");
                     Console.ForegroundColor = ConsoleColor.Yellow;
                 }
-                Console.WriteLine("Tryck på valfri knapp för att fortsätta.");
+                Console.WriteLine("Press a key to continue.");
                 Console.ReadKey();
                 break;
 
@@ -171,7 +171,7 @@ class UI
 
             default:
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Välj ett av valen från menyn.\nTryck på valfri knapp för att fortsätta.");
+                Console.WriteLine("Choose one of the options presented.\nPress a key to continue.");
                 Console.ReadKey();
                 break;
         }
